@@ -1,0 +1,41 @@
+name: Daily Bun Script
+
+on:
+  schedule:
+    # 每天國際標準時間 (UTC) 00:00 執行 (台灣時間早上 8:00)
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 允許手動點擊按鈕執行，方便測試
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run Script
+        run: bun run index.ts # 換成你的執行指令
+
+      - name: Send Discord Webhook on Success
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d "{\"content\": \"✅ 每日任務已成功執行！ (來自 GitHub Actions)\"}" \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - name: Send Discord Webhook on Failure
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d "{\"content\": \"❌ 每日任務執行失敗，請檢查 GitHub Actions 紀錄。\"}" \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}
