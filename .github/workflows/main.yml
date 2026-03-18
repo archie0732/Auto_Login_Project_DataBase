@@ -25,7 +25,9 @@ jobs:
         env:
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
-          LOGIN_PATH: ${{ secrets.LOGIN_PATH }}        
+          LOGIN_PATH: ${{ secrets.LOGIN_PATH }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
 
       - name: Send Discord Webhook on Success
         if: success()
