@@ -25,4 +25,4 @@ const autoLogin = async () => {
 
 }
 
-await autologin()
+await autoLogin()
