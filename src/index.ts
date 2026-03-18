@@ -1,31 +1,5 @@
-const autoLogin = async () => {
-  const email = Bun.env.EMAIL;
-  const password = Bun.env.PASSWORD;
-  const path = Bun.env.LOGIN_PATH;
+import { createClient } from '@supabase/supabase-js'
 
-  if (!email || !password || !path) {
-    throw new Error("Lost .env file");
-  }
+const supabase = createClient(Bun.env.SUPABASE_URL, Bun.env.SUPABASE_ANON_KEY);
 
-  try {
-    const response = await fetch(path, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`login fail: ${response.status}`);
-    }
-
-    console.log("Login successful!");
-  }
-  catch (e) {
-    console.error(e);
-    throw e;
-  }
-};
-
-autoLogin();
+console.log(supabase.storage)
